@@ -1,102 +1,153 @@
-import {  StyleSheet, View, Text, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet, Modal, TouchableOpacity, Image } from 'react-native';
 
 export default function Home() {
-  const [precoAlcool, setPrecoAlcool] = useState(0);
-  const [precoGasolina, setPrecoGasolina] = useState(0);
-  const [resultado, setResultado] = useState('');
-  const inputRef = useRef(null);
+  const [precoAlcool, setPrecoAlcool] = useState('');
+  const [precoGasolina, setPrecoGasolina] = useState('');
+  const [resultado, setResultado] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   function calcular() {
-    const resultado = precoAlcool / precoGasolina;
-    setResultado(resultado.toFixed(2))
-  
-    console.log(resultado)
+    const precoAlcoolNum = parseFloat(precoAlcool);
+    const precoGasolinaNum = parseFloat(precoGasolina);
+
+    if (isNaN(precoAlcoolNum) || isNaN(precoGasolinaNum)) {
+      Alert.alert('Erro', 'Por favor, insira valores válidos.');
+      return;
+    }
+
+    if (precoGasolinaNum > 0) {
+      const relacao = precoAlcoolNum / precoGasolinaNum;
+      setResultado(relacao.toFixed(2));
+      setModalVisible(true);
+    } else {
+      Alert.alert('Erro', 'O preço da gasolina deve ser maior que zero.');
+    }
   }
 
+  function fecharModal() {
+    setModalVisible(false);
+    setPrecoAlcool('');
+    setPrecoGasolina('');
+    setResultado(null);
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ alignItems: "center" }}>
-        <Text>Alcool (preço por litro):</Text>
+    <View style={styles.container}>
+      <Image 
+        source={require('../../assets/assalto.png')}
+        style={styles.image}
+      />
+      <Text style={styles.title}>Qual a melhor opção?</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Alcool (preço por litro):</Text>
         <TextInput
+          style={styles.input}
+          placeholder="R$ 0.00"
+          keyboardType="numeric"
           value={precoAlcool}
-          style={styles.input}
-          placeholder='0.00'
-          onChangeText={(texto) => setPrecoAlcool(parseFloat(texto))}
-          keyboardType='numeric'
-          ref={inputRef}
+          onChangeText={(texto) => setPrecoAlcool(texto)}
         />
       </View>
-
-      <View style={{ alignItems: "center" }}>
-        <Text>Gasolina (preço por litro):</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Gasolina (preço por litro):</Text>
         <TextInput
-          value={precoGasolina}
           style={styles.input}
-          placeholder='0.00'
-          onChangeText={(texto) => setPrecoGasolina(parseFloat(texto))}
-          keyboardType='numeric'
-          ref={inputRef}
+          placeholder="R$ 0.00"
+          keyboardType="numeric"
+          value={precoGasolina}
+          onChangeText={(texto) => setPrecoGasolina(texto)}
         />
       </View>
+      <Button title="Calcular" onPress={calcular} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={fecharModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.suggestion}>
+              {resultado <= 0.7 ? 'Abasteça com álcool' : 'Abasteça com gasolina'}
+            </Text>
 
-      <View style={styles.areaBtn}>
-        <TouchableOpacity
-          style={[styles.botao, { backgroundColor: "#1d75cd" }]}
-          onPress={calcular}
-        >
-          <Text style={styles.botaoText}>Calcular </Text>
-        </TouchableOpacity>
-      
-      </View>
-      
-    </SafeAreaView>
+            <TouchableOpacity style={styles.button} onPress={fecharModal}>
+              <Text style={styles.buttonText}>Calcular Novamente</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#f2f2f2',
   },
-  text: {
-    marginTop: 25,
+  image: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  inputContainer: {
     marginBottom: 15,
-    fontSize: 25,
-    fontWeight: "bold",
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   input: {
-    backgroundColor: "#fff",
+    height: 40,
+    borderColor: 'gray',
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 5,
-    width: "90%",
-    padding: 10,
-    fontSize: 18,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
-  areaBtn: {
-    alignItems: "center",
-    flexDirection: "row",
-    marginTop: 15,
-    justifyContent: "space-around",
-  },
-  botao: {
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 15,
-    borderRadius: 5,
-  },
-  botaoText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  resultado: {
+  modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  itemText: {
-    fontSize: 22,
+  modalView: {
+    width: 300,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  resultText: {
+    fontSize: 20,
+    color: 'green',
+    marginTop: 10,
+    marginBottom: 20,
+    fontWeight: 'bold',
+  },
+  suggestion: {
+    fontSize: 18,
+    color: 'green',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });

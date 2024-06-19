@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, Modal, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import BannerAlcool from '../../assets/BombaDeCombustível(Verde).png';
+import BannerGasolina from '../../assets/BombaDeCombustível.jpg';
 
 export default function Home() {
   const [precoAlcool, setPrecoAlcool] = useState('');
@@ -34,7 +46,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Image 
+      <Image
         source={require('../../assets/PostoDeGasolina.jpg')}
         style={styles.image}
       />
@@ -43,8 +55,8 @@ export default function Home() {
         <Text style={styles.label}>Alcool (preço por litro):</Text>
         <TextInput
           style={styles.input}
-          placeholder="R$ 0.00"
-          keyboardType="numeric"
+          placeholder='R$ 0.00'
+          keyboardType='numeric'
           value={precoAlcool}
           onChangeText={(texto) => setPrecoAlcool(texto)}
         />
@@ -53,40 +65,36 @@ export default function Home() {
         <Text style={styles.label}>Gasolina (preço por litro):</Text>
         <TextInput
           style={styles.input}
-          placeholder="R$ 0.00"
-          keyboardType="numeric"
+          placeholder='R$ 0.00'
+          keyboardType='numeric'
           value={precoGasolina}
           onChangeText={(texto) => setPrecoGasolina(texto)}
         />
       </View>
-      <TouchableOpacity style={styles.button}  onPress={calcular} >
-          <Text style={styles.buttonText}>
-            Calcular
-          </Text>
+      <TouchableOpacity style={styles.button} onPress={calcular}>
+        <Text style={styles.buttonText}>Calcular</Text>
       </TouchableOpacity>
       <Modal
-        // style={styles.modalView}
-        animationType="slide"
+        animationType='slide'
         transparent={true}
         visible={modalVisible}
         onRequestClose={fecharModal}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
-              <Image 
-            source={require('../../assets/BombaDeCombustível.jpg')}
-            style={styles.image}
-            />
+            {resultado < 0.7 ? (
+              <Image source={BannerAlcool} style={styles.image} />
+            ) : (
+              <Image source={BannerGasolina} style={styles.image} />
+            )}
             <Text style={styles.suggestion}>
-              {resultado <= 0.7 ? 'Abasteça com álcool' : 'Abasteça com gasolina'}
+              {resultado < 0.7
+                ? 'Abasteça com álcool'
+                : 'Abasteça com gasolina'}
             </Text>
-            <Text style={styles.ModalText}>
-              Álcool: R$ {precoAlcool}
-            </Text>
-              <Text style={styles.ModalText}>
-              Gasolina: R$ {precoGasolina}
-              </Text>
-            <Text/>
+            <Text style={styles.ModalText}>Álcool: R$ {precoAlcool}</Text>
+            <Text style={styles.ModalText}>Gasolina: R$ {precoGasolina}</Text>
+            <Text />
             <TouchableOpacity style={styles.button} onPress={fecharModal}>
               <Text style={styles.buttonText}>Calcular Novamente</Text>
             </TouchableOpacity>
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
     height: 250,
     alignSelf: 'center',
     marginBottom: 20,
-    borderRadius: 120
+    borderRadius: 120,
   },
   title: {
     fontSize: 24,
@@ -171,10 +179,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    
   },
   ModalText: {
     fontSize: 16,
     color: '#fff',
-  }
+  },
 });

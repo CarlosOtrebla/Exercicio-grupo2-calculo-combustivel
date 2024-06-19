@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Image 
-        source={require('../../assets/assalto.png')}
+        source={require('../../assets/PostoDeGasolina.jpg')}
         style={styles.image}
       />
       <Text style={styles.title}>Qual a melhor opção?</Text>
@@ -59,8 +59,13 @@ export default function Home() {
           onChangeText={(texto) => setPrecoGasolina(texto)}
         />
       </View>
-      <Button title="Calcular" onPress={calcular} />
+      <TouchableOpacity style={styles.button}  onPress={calcular} >
+          <Text style={styles.buttonText}>
+            Calcular
+          </Text>
+      </TouchableOpacity>
       <Modal
+        // style={styles.modalView}
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -68,10 +73,20 @@ export default function Home() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
+              <Image 
+            source={require('../../assets/BombaDeCombustível.jpg')}
+            style={styles.image}
+            />
             <Text style={styles.suggestion}>
               {resultado <= 0.7 ? 'Abasteça com álcool' : 'Abasteça com gasolina'}
             </Text>
-
+            <Text style={styles.ModalText}>
+              Álcool: R$ {precoAlcool}
+            </Text>
+              <Text style={styles.ModalText}>
+              Gasolina: R$ {precoGasolina}
+              </Text>
+            <Text/>
             <TouchableOpacity style={styles.button} onPress={fecharModal}>
               <Text style={styles.buttonText}>Calcular Novamente</Text>
             </TouchableOpacity>
@@ -87,19 +102,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#323232',
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 250,
+    height: 250,
     alignSelf: 'center',
     marginBottom: 20,
+    borderRadius: 120
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    color: 'white',
   },
   inputContainer: {
     marginBottom: 15,
@@ -107,13 +124,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
+    color: 'white',
   },
   input: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#c9c9c9',
   },
   modalContainer: {
     flex: 1,
@@ -124,7 +142,7 @@ const styles = StyleSheet.create({
   modalView: {
     width: 300,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#323232',
     borderRadius: 10,
     alignItems: 'center',
   },
@@ -136,18 +154,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   suggestion: {
-    fontSize: 18,
-    color: 'green',
+    fontSize: 22,
+    color: '#00d615',
     marginTop: 10,
     marginBottom: 20,
+    fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#e96054',
     padding: 10,
     borderRadius: 5,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    
   },
+  ModalText: {
+    fontSize: 16,
+    color: '#fff',
+  }
 });
